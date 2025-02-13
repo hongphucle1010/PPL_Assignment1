@@ -99,7 +99,6 @@ lhs:
 	| lhs DOT ID; // Struct field access
 assignmentOp:
 	DECLARE
-	| ASSIGN
 	| ADD_ASSIGN
 	| SUB_ASSIGN
 	| MUL_ASSIGN
@@ -140,8 +139,11 @@ literal:
 	| NIL
 	| arrayLiteral
 	| structLiteral;
-arrayLiteral: arrayType LBRACE exprList? RBRACE;
+arrayLiteral: arrayType arrayBody;
+arrayBody: LBRACE arrayList? RBRACE;
 arrayType: LBRACK INT_LIT RBRACK typeSpec;
+arrayList: arrayMember (COMMA arrayList)?;
+arrayMember: expression | arrayBody;
 structLiteral: ID LBRACE structElements? RBRACE;
 structElements: structElement (COMMA structElements)?;
 structElement: ID COLON expression;

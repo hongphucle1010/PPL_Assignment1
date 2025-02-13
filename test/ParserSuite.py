@@ -336,14 +336,354 @@ class ParserSuite(unittest.TestCase):
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 255))
 
+    def test_array_literal_2(self):
+        """Multi-dimensional array literal"""
+        input = """const a = [3][2]int{{1, 2}, {3, 4}, {5, 6}};"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 256))
+
     def test_struct_literal(self):
         """Struct literal"""
         input = """const a = Person{name:"name", age: 20};"""
         expect = "successful"
-        self.assertTrue(TestParser.checkParser(input, expect, 256))
+        self.assertTrue(TestParser.checkParser(input, expect, 257))
 
     def test_nil_literal(self):
         """Nil literal"""
         input = """const a = nil;"""
         expect = "successful"
-        self.assertTrue(TestParser.checkParser(input, expect, 257))
+        self.assertTrue(TestParser.checkParser(input, expect, 258))
+
+    #! ------------------- Expression ------------------- !
+    def test_identifier_expression(self):
+        """Identifier expression"""
+        input = """const a = b;"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 259))
+
+    def test_array_element_expression(self):
+        """Array element expression"""
+        input = """const a = b[1];"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 260))
+
+    def test_array_element_expression_2(self):
+        """Array element expression with expression index"""
+        input = """const a = b[1 + 2];"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 261))
+
+    def test_array_element_expression_3(self):
+        """Multi-dimensional array element expression"""
+        input = """const a = b[1][2];"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 262))
+
+    def test_struct_field_expression(self):
+        """Struct field expression"""
+        input = """const a = b.name;"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 263))
+
+    def test_struct_field_expression_2(self):
+        """Nested struct field expression"""
+        input = """const a = b.c.d;"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 264))
+
+    def test_function_call_expression(self):
+        """Function call expression"""
+        input = """const a = foo();"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 265))
+
+    def test_method_call_expression(self):
+        """Method call expression"""
+        input = """const a = b.foo();"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 266))
+
+    def test_unary_expression(self):
+        """Unary expression"""
+        input = """const a = -b;"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 267))
+
+    def test_binary_expression(self):
+        """Binary expression"""
+        input = """const a = b + c;"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 268))
+
+    def test_large_expression(self):
+        """Large expression"""
+        input = """const a = b + c * d / e % f;"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 269))
+
+    def test_expression_with_parentheses(self):
+        """Expression with parentheses"""
+        input = """const a = (b + c) * d;"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 270))
+
+    def test_relational_expression(self):
+        """Relational expression with ==, !=, <, >, <=, >= operator"""
+        input = """const a = b > c == d >= e != g < h == i <=j;"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 271))
+
+    def test_logical_expression(self):
+        """Logical expression with &&, ||, ! operator"""
+        input = """const a = b && c || d && !e;"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 272))
+
+    def test_invalid_expression(self):
+        """Invalid expression"""
+        input = """const a = b +;"""
+        expect = "Error on line 1 col 14: ;"
+        self.assertTrue(TestParser.checkParser(input, expect, 273))
+
+    def test_invalid_expression_2(self):
+        """Missing expression"""
+        input = """const a = ;"""
+        expect = "Error on line 1 col 11: ;"
+        self.assertTrue(TestParser.checkParser(input, expect, 274))
+
+    def test_invalid_expression_3(self):
+        """Missing parentheses"""
+        input = """const a = (b + c;"""
+        expect = "Error on line 1 col 17: ;"
+        self.assertTrue(TestParser.checkParser(input, expect, 275))
+
+    def test_invalid_expression_4(self):
+        """Missing operator"""
+        input = """const a = b c;"""
+        expect = "Error on line 1 col 13: c"
+        self.assertTrue(TestParser.checkParser(input, expect, 276))
+
+    def test_invalid_expression_5(self):
+        """Missing left hand side"""
+        input = """const a = + b;"""
+        expect = "Error on line 1 col 11: +"
+        self.assertTrue(TestParser.checkParser(input, expect, 277))
+
+    def test_invalid_expression_6(self):
+        """Missing index"""
+        input = """const a = b[];"""
+        expect = "Error on line 1 col 13: ]"
+        self.assertTrue(TestParser.checkParser(input, expect, 278))
+
+    def test_invalid_expression_7(self):
+        """Missing field"""
+        input = """const a = b.;"""
+        expect = "Error on line 1 col 13: ;"
+        self.assertTrue(TestParser.checkParser(input, expect, 279))
+
+    def test_invalid_expression_8(self):
+        """Wrong operator"""
+        input = """const a = b & c;"""
+        expect = "&"
+        self.assertTrue(TestParser.checkParser(input, expect, 280))
+
+    def test_invalid_expression_9(self):
+        """Missing parameter after comma"""
+        input = """const a = foo(a,);"""
+        expect = "Error on line 1 col 17: )"
+        self.assertTrue(TestParser.checkParser(input, expect, 281))
+
+    def test_invalid_expression_10(self):
+        """Missing parameter"""
+        input = """const a = foo(,);"""
+        expect = "Error on line 1 col 15: ,"
+        self.assertTrue(TestParser.checkParser(input, expect, 282))
+
+    def test_invalid_expression_11(self):
+        """Missing method after dot"""
+        input = """const a = b.;"""
+        expect = "Error on line 1 col 13: ;"
+        self.assertTrue(TestParser.checkParser(input, expect, 283))
+
+    def test_invalid_expression_12(self):
+        """Using wrong operator when assign value"""
+        input = """const a = b = c;"""
+        expect = "Error on line 1 col 13: ="
+        self.assertTrue(TestParser.checkParser(input, expect, 284))
+
+    #! ------------------- Statement 7 ------------------- !
+    def test_declaration_statement(self):
+        """Variable declaration statement"""
+        input = """func main() {var a int;};"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 285))
+
+    def test_declaration_statement_2(self):
+        """Constant declaration statement"""
+        input = """func main() {a := 1;};"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 286))
+
+    def test_declaration_statement_3(self):
+        """Cannot have function declaration statement"""
+        input = """func main() {func foo() {};};"""
+        expect = "Error on line 1 col 14: func"
+        self.assertTrue(TestParser.checkParser(input, expect, 287))
+
+    def test_declaration_statement_4(self):
+        """Cannot have method declaration statement"""
+        input = """func main() {func (a Person) foo() {};};"""
+        expect = "Error on line 1 col 14: func"
+        self.assertTrue(TestParser.checkParser(input, expect, 288))
+
+    def test_declaration_statement_5(self):
+        """Cannot have struct declaration statement"""
+        input = """func main() {type Person struct {};};"""
+        expect = "Error on line 1 col 14: type"
+        self.assertTrue(TestParser.checkParser(input, expect, 289))
+
+    def test_declaration_statement_6(self):
+        """Cannot have interface declaration statement"""
+        input = """func main() {type Person interface {};};"""
+        expect = "Error on line 1 col 14: type"
+        self.assertTrue(TestParser.checkParser(input, expect, 290))
+
+    def test_assignment_statement(self):
+        """Assignment statement"""
+        input = """func main() {a := 1;};"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 291))
+
+    def test_assignment_statement_2(self):
+        """Wrong assignment operator"""
+        input = """func main() {a = 1;};"""
+        expect = "Error on line 1 col 16: ="
+        self.assertTrue(TestParser.checkParser(input, expect, 292))
+
+    def test_assignment_statement_3(self):
+        """Assignment statement with expression"""
+        input = """func main() {a := b + c;};"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 293))
+
+    def test_assignment_statement_4(self):
+        """Assignment with +=, -=, *=, /=, %= operator"""
+        input = """func main() {a += b; a -= c; a *= d; a /= e; a %= f;};"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 294))
+
+    def test_assignment_statement_5(self):
+        """Missing right hand side"""
+        input = """func main() {a := ;};"""
+        expect = "Error on line 1 col 19: ;"
+        self.assertTrue(TestParser.checkParser(input, expect, 295))
+
+    def test_assignment_statement_6(self):
+        """Missing left hand side"""
+        input = """func main() { := 1;};"""
+        expect = "Error on line 1 col 15: :="
+        self.assertTrue(TestParser.checkParser(input, expect, 296))
+
+    def test_assignment_statement_7(self):
+        """Missing operator"""
+        input = """func main() {a b;};"""
+        expect = "Error on line 1 col 16: b"
+        self.assertTrue(TestParser.checkParser(input, expect, 297))
+
+    def test_if_statement(self):
+        """If statement"""
+        input = """func main() {
+            if (a == 1) {
+                a := 10;
+            } else if (a >= 1) {
+                a := 20;
+            } else {
+                a := 30;
+            }
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 298))
+
+    def test_if_statement_2(self):
+        """If statement without else"""
+        input = """func main() {
+            if (a == 1) {
+                a := 10;
+            }
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 299))
+
+    def test_if_statement_3(self):
+        """If statement without else if"""
+        input = """func main() {
+            if (a == 1) {
+                a := 10;
+            } else {
+                a := 20;
+            }
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 300))
+
+    def test_if_statement_4(self):
+        """If statement with if and else if no else"""
+        input = """func main() {
+            if (a == 1) {
+                a := 10;
+            } else if (a >= 1) {
+                a := 20;
+            }
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 301))
+
+    def test_if_statement_5(self):
+        """Missing condition"""
+        input = """func main() {
+            if () {
+                a := 10;
+            }
+        };"""
+        expect = "Error on line 2 col 17: )"
+        self.assertTrue(TestParser.checkParser(input, expect, 302))
+
+    def test_if_statement_6(self):
+        """Missing body"""
+        input = """func main() {
+            if (a == 1);
+        };"""
+        expect = "Error on line 2 col 24: ;"
+        self.assertTrue(TestParser.checkParser(input, expect, 303))
+
+    def test_if_statement_7(self):
+        """Missing parentheses"""
+        input = """func main() {
+            if a == 1 {
+                a := 10;
+            }
+        };"""
+        expect = "Error on line 2 col 16: a"
+        self.assertTrue(TestParser.checkParser(input, expect, 304))
+
+    def test_if_statement_8(self):
+        """Missing braces"""
+        input = """func main() {
+            if (a == 1)
+                a := 10;
+        };"""
+        expect = "Error on line 2 col 24: ;"
+        self.assertTrue(TestParser.checkParser(input, expect, 305))
+
+    def test_if_statement_9(self):
+        """The left brace should be on the same line with if"""
+        input = """func main() 
+            if (a == 1) 
+            {
+                a := 10;
+            }
+        };"""
+        expect = "Error on line 1 col 14: ;"
+        self.assertTrue(TestParser.checkParser(input, expect, 306))
+        
+    
