@@ -685,5 +685,663 @@ class ParserSuite(unittest.TestCase):
         };"""
         expect = "Error on line 1 col 14: ;"
         self.assertTrue(TestParser.checkParser(input, expect, 306))
+
+    def test_for_statement(self):
+        """Basic for statement"""
+        input = """func main() {
+            for i < 10 {
+                a := i;
+            }
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 307))
+
+    def test_for_statement_2(self):
+        """For statement with init statement"""
+        input = """func main() {
+            for i := 0; i < 10; i+=1 {
+                a := i;
+            }
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 308))
+
+    def test_for_statement_3(self):
+        """For statement with range"""
+        input = """func main() {
+            for i, value := range a {
+                a := value;
+            }
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 309))
+
+    def test_for_statement_4(self):
+        """For statement with underscore"""
+        input = """func main() {
+            for _, value := range a {
+                a := value;
+            }
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 310))
+
+    def test_for_statement_5(self):
+        """Basic for with invalid expression"""
+        input = """func main() {
+            for int {
+                a := i;
+            }
+        };"""
+        expect = "Error on line 2 col 17: int"
+        self.assertTrue(TestParser.checkParser(input, expect, 311))
+
+    def test_for_statement_6(self):
+        """For statement with wrong range operator"""
+        input = """func main() {
+            for i, value = range a {
+                a := value;
+            }
+        };"""
+        expect = "Error on line 2 col 26: ="
+        self.assertTrue(TestParser.checkParser(input, expect, 312))
+
+    def test_for_statement_7(self):
+        """For statement with missing keyword range"""
+        input = """func main() {
+            for i, value := a {
+                a := value;
+            }
+        };"""
+        expect = "Error on line 2 col 29: a"
+        self.assertTrue(TestParser.checkParser(input, expect, 313))
+
+    def test_for_statement_8(self):
+        """For statement with missing range name"""
+        input = """func main() {
+            for i, value := range {
+                a := value;
+            }
+        };"""
+        expect = "Error on line 2 col 35: {"
+        self.assertTrue(TestParser.checkParser(input, expect, 314))
+
+    def test_for_statement_9(self):
+        """For statement with assignment initialization"""
+        input = """func main() {
+            for i := 0; i < 10; i+=1 {
+                a := i;
+            }
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 315))
+
+    def test_for_statement_10(self):
+        """For statement with declaration initialization"""
+        input = """func main() {
+            for var i int = 0; i < 10; i+=1 {
+                a := i;
+            }
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 316))
+
+    def test_for_statement_11(self):
+        """For statement with wrong initialization: constant declaration"""
+        input = """func main() {
+            for const i = 0; i < 10; i+=1 {
+                a := i;
+            }
+        };"""
+        expect = "Error on line 2 col 17: const"
+        self.assertTrue(TestParser.checkParser(input, expect, 317))
+
+    def test_for_statement_12(self):
+        """For statement with wrong initialization: expression"""
+        input = """func main() {
+            for true; i < 10; i+=1 {
+                a := i;
+            }
+        };"""
+        expect = "Error on line 2 col 21: ;"
+        self.assertTrue(TestParser.checkParser(input, expect, 318))
+
+    def test_for_statement_13(self):
+        """For statement with wrong initialization: if statement"""
+        input = """func main() {
+            for if (true) {}; i+=1 {
+                a := i;
+            }
+        };"""
+        expect = "Error on line 2 col 17: if"
+        self.assertTrue(TestParser.checkParser(input, expect, 319))
+
+    def test_for_statement_14(self):
+        """For statement with wrong condition: declaration statement"""
+        input = """func main() {
+            for i := 0; var j int = 10; i+=1 {
+                a := i;
+            }
+        };"""
+        expect = "Error on line 2 col 25: var"
+        self.assertTrue(TestParser.checkParser(input, expect, 320))
+
+    def test_for_statement_15(self):
+        """For statement with wrong condition: assignment statement"""
+        input = """func main() {
+            for i := 0; j := 10; i+=1 {
+                a := i;
+            }
+        };"""
+        expect = "Error on line 2 col 27: :="
+        self.assertTrue(TestParser.checkParser(input, expect, 321))
+
+    def test_for_statement_16(self):
+        """For statement with wrong condition: if statement"""
+        input = """func main() {
+            for i := 0; if (true) {}; i+=1 {
+                a := i;
+            }
+        };"""
+        expect = "Error on line 2 col 25: if"
+        self.assertTrue(TestParser.checkParser(input, expect, 322))
+
+    def test_for_statement_17(self):
+        """For statement with wrong update: declaration statement"""
+        input = """func main() {
+            for i := 0; i < 10; var j int {
+                a := i;
+            }
+        };"""
+        expect = "Error on line 2 col 33: var"
+        self.assertTrue(TestParser.checkParser(input, expect, 323))
+
+    def test_for_statement_18(self):
+        """For statement with wrong update: expression"""
+        input = """func main() {
+            for i := 0; i < 10; true {
+                a := i;
+            }
+        };"""
+        expect = "Error on line 2 col 33: true"
+        self.assertTrue(TestParser.checkParser(input, expect, 324))
+
+    def test_for_statement_19(self):
+        """For statement with wrong update: if statement"""
+        input = """func main() {
+            for i := 0; i < 10; if (true) {} {
+                a := i;
+            }
+        };"""
+        expect = "Error on line 2 col 33: if"
+        self.assertTrue(TestParser.checkParser(input, expect, 325))
+
+    def test_for_statement_20(self):
+        """For statement with missing 1 of 3 parts"""
+        input = """func main() {
+            for i < 10; i+=1 {
+                a := i;
+            }
+        };"""
+        expect = "Error on line 2 col 23: ;"
+        self.assertTrue(TestParser.checkParser(input, expect, 326))
+
+    def test_for_statement_21(self):
+        """Basic for with wrong expression: declaration statement"""
+        input = """func main() {
+            for var i int = 0 {
+                a := i;
+            }
+        };"""
+        expect = "Error on line 2 col 31: {"
+        self.assertTrue(TestParser.checkParser(input, expect, 327))
+
+    def test_for_statement_22(self):
+        """Basic for with wrong expression: assignment statement"""
+        input = """func main() {
+            for i := 0 {
+                a := i;
+            }
+        };"""
+        expect = "Error on line 2 col 24: {"
+        self.assertTrue(TestParser.checkParser(input, expect, 328))
+
+    #! ------------------- Break, Continue, Return ------------------- !
+    def test_break_statement(self):
+        """Break statement"""
+        input = """func main() {
+            for i < 10 {
+                break;
+            }
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 329))
+
+    def test_break_statement_2(self):
+        """Cannot assign break to a variable"""
+        input = """func main() {
+            for i < 10 {
+                a := break;
+            }
+        };"""
+        expect = "Error on line 3 col 22: break"
+        self.assertTrue(TestParser.checkParser(input, expect, 330))
+
+    def test_continue_statement(self):
+        """Continue statement"""
+        input = """func main() {
+            for i < 10 {
+                continue;
+            }
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 331))
+
+    def test_continue_statement_2(self):
+        """Cannot assign continue to a variable"""
+        input = """func main() {
+            for i < 10 {
+                a := continue;
+            }
+        };"""
+        expect = "Error on line 3 col 22: continue"
+        self.assertTrue(TestParser.checkParser(input, expect, 332))
+
+    def test_return_statement(self):
+        """Return statement"""
+        input = """func main() {
+            return 1;
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 333))
+
+    def test_return_statement_2(self):
+        """Return statement with expression"""
+        input = """func main() {
+            return a;
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 334))
+
+    def test_return_statement_3(self):
+        """Return statement with no expression"""
+        input = """func main() {
+            return;
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 335))
+
+    def test_return_statement_4(self):
+        """Cannot assign return to a variable"""
+        input = """func main() {
+            a := return;
+        };"""
+        expect = "Error on line 2 col 18: return"
+        self.assertTrue(TestParser.checkParser(input, expect, 336))
+
+    #! ------------------- Call statement ------------------- !
+    def test_call_statement(self):
+        """Call statement"""
+        input = """func main() {
+            foo();
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 337))
+
+    def test_call_statement_2(self):
+        """Call statement with parameter"""
+        input = """func main() {
+            foo(a);
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 338))
+
+    def test_call_statement_3(self):
+        """Call statement with multiple parameters"""
+        input = """func main() {
+            foo(a, b, c);
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 339))
+
+    def test_call_statement_4(self):
+        """Call statement with expression"""
+        input = """func main() {
+            foo(a + b);
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 340))
+
+    def test_call_statement_5(self):
+        """Call statement with nested call"""
+        input = """func main() {
+            foo(bar());
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 341))
+
+    def test_call_statement_6(self):
+        """Call statement with method call"""
+        input = """func main() {
+            a.foo();
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 342))
+
+    def test_call_statement_7(self):
+        """Call statement with method call with parameter"""
+        input = """func main() {
+            a.foo(b);
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 343))
+
+    def test_call_statement_8(self):
+        """Call statement with method call with multiple parameters"""
+        input = """func main() {
+            a.foo(b, c, d);
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 344))
+
+    def test_call_statement_9(self):
+        """Call statement with method call with expression"""
+        input = """func main() {
+            a.foo(b + c);
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 345))
+
+    def test_call_statement_10(self):
+        """Call statement with method call with nested call"""
+        input = """func main() {
+            a.foo(bar());
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 346))
+
+    def test_call_statement_11(self):
+        """Call statement with method call with method call"""
+        input = """func main() {
+            a.foo().bar();
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 347))
+
+    def test_call_statement_12(self):
+        """Call statement with method call with method call with parameter"""
+        input = """func main() {
+            a.foo().bar(b);
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 348))
+
+    def test_call_statement_13(self):
+        """Call statement with method call with method call with multiple parameters"""
+        input = """func main() {
+            a.foo().bar(b, c, d);
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 349))
+
+    def test_call_statement_14(self):
+        """Assign call statement to a variable"""
+        input = """func main() {
+            a := foo();
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 350))
+
+    def test_call_statement_15(self):
+        """Assign call statement to a variable with parameter"""
+        input = """func main() {
+            a := foo(b);
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 351))
+
+    def test_call_statement_16(self):
+        """Method call as a parameter"""
+        input = """func main() {
+            foo(a.foo());
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 352))
+
+    def test_call_statement_17(self):
+        """Method call as a parameter with parameter"""
+        input = """func main() {
+            foo(a.foo(b));
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 353))
+
+    def test_call_statement_18(self):
+        """Method call as a parameter with multiple parameters"""
+        input = """func main() {
+            foo(a.foo(b, c, d));
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 354))
+
+    def test_call_statement_19(self):
+        """Wrong call statement: missing parentheses"""
+        input = """func main() {
+            foo;
+        };"""
+        expect = "Error on line 2 col 16: ;"
+        self.assertTrue(TestParser.checkParser(input, expect, 355))
+
+    def test_call_statement_20(self):
+        """Wrong call statement: Missing identifier after comma seperator of parameters"""
+        input = """func main() {
+            foo(a, );
+        };"""
+        expect = "Error on line 2 col 20: )"
+        self.assertTrue(TestParser.checkParser(input, expect, 356))
+
+    def test_call_statement_21(self):
+        """Wrong call statement: Missing identifier after comma seperator of parameters"""
+        input = """func main() {
+            foo(, a);
+        };"""
+        expect = "Error on line 2 col 17: ,"
+        self.assertTrue(TestParser.checkParser(input, expect, 357))
+
+    #! ------------------- Block statement ------------------- !
+    def test_block_statement(self):
+        """Block statement"""
+        input = """func main() {
+                a := 1;
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 358))
+
+    def test_block_statement_2(self):
+        """Block statement with multiple statements"""
+        input = """func main() {
+                a := 1;
+                b := 2;
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 359))
+
+    def test_block_statement_3(self):
+        """Block statement with multiple statements separated by newline"""
+        input = """func main() {
+                a := 1;
+                b := 2;
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 360))
+
+    def test_block_statement_4(self):
+        """Statements not separated by semicolon and newline"""
+        input = """func main() {
+                a := 1, b := 2
+        };"""
+        expect = "Error on line 2 col 23: ,"
+        self.assertTrue(TestParser.checkParser(input, expect, 361))
+
+    #! ------------------- Newline ------------------- !
+    def test_newline(self):
+        """Newline"""
+        input = """func main() {
+                a := 1
+                b := 2
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 362))
+
+    def test_newline_2(self):
+        """Newline with empty line"""
+        input = """func main() {
+                a := 1
+
+                b := 2
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 363))
+
+    def test_newline_3(self):
+        """Many declarations with newline"""
+        input = """var a int
         
-    
+        const b = 1
+        
+        func main() {
+            a := 1
+            b := 2
+        }
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 364))
+
+    def test_newline_4(self):
+        """Struct with newline"""
+        input = """type Person struct {
+            name string
+            age int
+        }
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 365))
+
+    def test_newline_5(self):
+        """Interface with newline"""
+        input = """type Person interface {
+            Hello()
+            Hi() int
+        }
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 366))
+
+    def test_newline_6(self):
+        """For statement with newline"""
+        input = """func main() {
+            for i < 10 {
+                a := i
+            }
+        }
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 367))
+
+    #! ------------------- Comments ------------------- !
+    def test_single_line_comment(self):
+        """Single line comment"""
+        input = """// This is a comment
+        func main() {
+            a := 1
+        }
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 368))
+        
+    def test_single_line_comment_2(self):
+        """Single line comment with newline"""
+        input = """// This is a comment
+
+        func main() {
+            a := 1
+        }
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 369))
+        
+    def test_single_line_comment_3(self):
+        """Single line of single line comment"""
+        input = """// This is a comment
+        // This is another comment
+        func main() {
+            a := 1
+        }
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 370))
+        
+    def test_single_line_comment_4(self):
+        """Single line of single line comment with newline"""
+        input = """// This is a comment
+        // This is another comment
+
+        func main() {
+            a := 1
+        }
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 371))
+        
+    def test_multi_line_comment(self):
+        """Multi line comment"""
+        input = """/* This is a comment */
+        func main() {
+            a := 1
+        }
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 372))
+        
+    def test_multi_line_comment_2(self):
+        """Multi line comment with newline"""
+        input = """/* This is a comment */
+
+        func main() {
+            a := 1
+        }
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 373))
+        
+    def test_multi_line_comment_3(self):
+        """Multi line of multi line comment"""
+        input = """/* This is a comment */
+        /* This is another comment */
+        func main() {
+            a := 1
+        }
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 374))
+        
+    def test_multi_line_comment_4(self):
+        """Nested multi line comment"""
+        input = """/* This is a comment /* This is a nested comment */ */
+        func main() {
+            a := 1
+        }
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 375))
+        
+    def test_multi_line_comment_5(self):
+        """Two nested multi line comment with the code in between"""
+        input = """/* This is a comment /* This is a nested comment */ */
+        func main() {
+            a := 1
+        }
+        /* This is another comment */
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 376))

@@ -6,15 +6,14 @@ from lexererr import *
 
 @lexer::members {
 def emit(self):
-    self.ltk = self.type
-    tk = self.type
-    if tk == self.UNCLOSE_STRING:       
+    self.last_token_type = self.type
+    if self.last_token_type == self.UNCLOSE_STRING:       
         result = super().emit();
         raise UncloseString(result.text);
-    elif tk == self.ILLEGAL_ESCAPE:
+    elif self.last_token_type == self.ILLEGAL_ESCAPE:
         result = super().emit();
         raise IllegalEscape(result.text);
-    elif tk == self.ERROR_CHAR:
+    elif self.last_token_type == self.ERROR_CHAR:
         result = super().emit();
         raise ErrorToken(result.text); 
     else:
@@ -168,7 +167,8 @@ expr7:
 	| funcCall
 	| methodCall;
 funcCall: ID LPAREN exprList? RPAREN;
-methodCall: ID DOT ID LPAREN exprList? RPAREN;
+methodCall: ID methodChain;
+methodChain: DOT ID LPAREN exprList? RPAREN (methodChain)?;
 
 // ! ---------------- LEXER DEADLINE PASS 13 TEST CASE 23:59 16/1 ----------------------- */
 
@@ -251,7 +251,7 @@ ID: [a-zA-Z_][a-zA-Z_0-9]*;
 //TODO skip 3.1 and 3.2 pdf
 NEWLINE:
 	'\r'? '\n' {
-    if hasattr(self, 'ltk') and self.ltk in [
+    if hasattr(self, 'last_token_type') and self.last_token_type in [
 		self.ID, self.INT_LIT, self.HEX_LIT, self.BIN_LIT, self.OCT_LIT, self.FLOAT_LIT, self.BOOLEAN, self.STR_LIT, 
 		self.RPAREN, self.RBRACK, self.RBRACE, self.STRING, self.INT, self.FLOAT, self.BOOLEAN, self.NIL, self.TRUE, self.FALSE,
 		self.RETURN, self.CONTINUE, self.BREAK
