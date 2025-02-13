@@ -662,3 +662,54 @@ class LexerSuite(unittest.TestCase):
                 """ "\\" \\\\ \\q" """, 'Illegal escape in string: \"\\" \\\\ \\q', 186
             )
         )
+    def test_unclosed_comment(self):
+        """test unclosed comment"""
+        self.assertTrue(
+            TestLexer.checkLexeme(
+                """/* Unclosed comment""",
+                "/,*,Unclosed,comment,<EOF>",
+                187
+            )
+        )
+    
+    def test_very_long_identifier(self):
+        """test very long identifier"""
+        self.assertTrue(
+            TestLexer.checkLexeme(
+                "a"*1000,
+                "a"*1000+",<EOF>",
+                188
+            )
+        )
+        
+    def test_separator_4(self):
+        """test separators with new line"""
+        self.assertTrue(
+            TestLexer.checkLexeme(
+                "(){},;",
+                "(,),{,},,,;,<EOF>",
+                189
+            )
+        )
+        
+    def test_operator_4(self):
+        """test with expression"""
+        self.assertTrue(
+            TestLexer.checkLexeme(
+                "1+2-3*4/5%6",
+                "1,+,2,-,3,*,4,/,5,%,6,<EOF>",
+                190
+            )
+        )
+        
+    def test_operator_5(self):
+        """test with expression"""
+        self.assertTrue(
+            TestLexer.checkLexeme(
+                "1+2-3*4/5%6",
+                "1,+,2,-,3,*,4,/,5,%,6,<EOF>",
+                191
+            )
+        )
+        
+        

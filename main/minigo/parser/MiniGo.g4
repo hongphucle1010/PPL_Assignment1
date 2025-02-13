@@ -1,3 +1,4 @@
+// 2212615
 grammar MiniGo;
 
 @lexer::header {
@@ -170,9 +171,7 @@ funcCall: ID LPAREN exprList? RPAREN;
 methodCall: ID methodChain;
 methodChain: DOT ID LPAREN exprList? RPAREN (methodChain)?;
 
-// ! ---------------- LEXER DEADLINE PASS 13 TEST CASE 23:59 16/1 ----------------------- */
-
-//TODO Keywords 3.3.2 pdf
+// !-----------------LEXER-----------------!
 IF: 'if';
 ELSE: 'else';
 FOR: 'for';
@@ -194,7 +193,6 @@ FALSE: 'false';
 BOOLEAN: 'boolean';
 CONST: 'const';
 
-//TODO Operators 3.3.3 pdf
 ADD: '+';
 SUB: '-';
 MUL: '*';
@@ -221,7 +219,6 @@ OR: '||';
 NOT: '!';
 DOT: '.';
 
-//TODO Separators 3.3.4 pdf
 LPAREN: '(';
 RPAREN: ')';
 LBRACE: '{';
@@ -232,7 +229,6 @@ COMMA: ',';
 SEMI: ';';
 COLON: ':';
 
-//TODO Literals 3.3.5 pdf
 INT_LIT: '0' | [1-9] [0-9]*;
 BIN_LIT: '0' [bB] [01]+;
 OCT_LIT: '0' [oO] [0-7]+;
@@ -245,10 +241,8 @@ fragment STR_CHAR: ~[\n"\\] | ESCAPE;
 STR_LIT: '"' STR_CHAR* '"';
 UNDERSCORE: '_';
 
-//TODO Identifiers 3.3.1 pdf
 ID: [a-zA-Z_][a-zA-Z_0-9]*;
 
-//TODO skip 3.1 and 3.2 pdf
 NEWLINE:
 	'\r'? '\n' {
     if hasattr(self, 'last_token_type') and self.last_token_type in [
@@ -266,7 +260,6 @@ WS: [ \t\f\r]+ -> skip;
 COMMENT: '//' ~[\r\n]* -> skip;
 BLOCK_COMMENT: '/*' (BLOCK_COMMENT | .)*? '*/' -> skip;
 
-//TODO ERROR pdf BTL1 + lexererr.py
 UNCLOSE_STRING:
 	'"' STR_CHAR* ('\r\n' | '\n' | EOF) {
 if (len(self.text) >= 2 and self.text[-1] == '\n' and self.text[-2] == '\r'):
