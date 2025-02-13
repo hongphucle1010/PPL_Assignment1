@@ -1258,7 +1258,7 @@ class ParserSuite(unittest.TestCase):
         """
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 368))
-        
+
     def test_single_line_comment_2(self):
         """Single line comment with newline"""
         input = """// This is a comment
@@ -1269,7 +1269,7 @@ class ParserSuite(unittest.TestCase):
         """
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 369))
-        
+
     def test_single_line_comment_3(self):
         """Single line of single line comment"""
         input = """// This is a comment
@@ -1280,7 +1280,7 @@ class ParserSuite(unittest.TestCase):
         """
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 370))
-        
+
     def test_single_line_comment_4(self):
         """Single line of single line comment with newline"""
         input = """// This is a comment
@@ -1292,7 +1292,7 @@ class ParserSuite(unittest.TestCase):
         """
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 371))
-        
+
     def test_multi_line_comment(self):
         """Multi line comment"""
         input = """/* This is a comment */
@@ -1302,7 +1302,7 @@ class ParserSuite(unittest.TestCase):
         """
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 372))
-        
+
     def test_multi_line_comment_2(self):
         """Multi line comment with newline"""
         input = """/* This is a comment */
@@ -1313,7 +1313,7 @@ class ParserSuite(unittest.TestCase):
         """
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 373))
-        
+
     def test_multi_line_comment_3(self):
         """Multi line of multi line comment"""
         input = """/* This is a comment */
@@ -1324,7 +1324,7 @@ class ParserSuite(unittest.TestCase):
         """
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 374))
-        
+
     def test_multi_line_comment_4(self):
         """Nested multi line comment"""
         input = """/* This is a comment /* This is a nested comment */ */
@@ -1334,7 +1334,7 @@ class ParserSuite(unittest.TestCase):
         """
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 375))
-        
+
     def test_multi_line_comment_5(self):
         """Two nested multi line comment with the code in between"""
         input = """/* This is a comment /* This is a nested comment */ */
@@ -1345,3 +1345,23 @@ class ParserSuite(unittest.TestCase):
         """
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 376))
+
+    #! ------------------- Mix ------------------- !
+    def test_negative_numbers_with_not_operator(self):
+        """Negative numbers with not operator"""
+        input = """func main() {
+            a := !-1 == 1;
+        }
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 377))
+
+    def test_multiply_with_negative_numbers(self):
+        """Multiply with negative numbers"""
+        input = """func main() {
+            a := -1 * -1;
+        }
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 378))
+        

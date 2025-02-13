@@ -156,7 +156,7 @@ expr3: expr3 addOp expr4 | expr4;
 addOp: ADD | SUB;
 expr4: expr4 mulOp expr5 | expr5;
 mulOp: MUL | DIV | MOD;
-expr5: (NOT | SUB) expr6 | expr6;
+expr5: (NOT | SUB) expr5 | expr6;
 expr6:
 	expr6 LBRACK expression RBRACK
 	| expr6 DOT (ID | funcCall)

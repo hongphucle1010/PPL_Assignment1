@@ -344,36 +344,38 @@ class LexerSuite(unittest.TestCase):
 
     def test_unclosed_string(self):
         """test unclosed string end with EOF"""
-        self.assertTrue(TestLexer.checkLexeme('"abc', "Unclosed string: \"abc", 156))
+        self.assertTrue(TestLexer.checkLexeme('"abc', 'Unclosed string: "abc', 156))
 
     def test_unclosed_string_2(self):
         """test unclosed string end with new line"""
         self.assertTrue(
-            TestLexer.checkLexeme('"abc\naaa"', "Unclosed string: \"abc", 157)
+            TestLexer.checkLexeme('"abc\naaa"', 'Unclosed string: "abc', 157)
         )
 
     def test_unclosed_string_3(self):
         """test illegal escape character"""
         self.assertTrue(
-            TestLexer.checkLexeme('"abc\\"', 'Unclosed string: \"abc\\"', 158)
+            TestLexer.checkLexeme('"abc\\"', 'Unclosed string: "abc\\"', 158)
         )
 
     def test_unclosed_string_4(self):
         """test unclosed string having escape character"""
         self.assertTrue(
-            TestLexer.checkLexeme('"abc\\n', "Unclosed string: \"abc\\n", 159)
+            TestLexer.checkLexeme('"abc\\n', 'Unclosed string: "abc\\n', 159)
         )
 
     def test_illegal_escape(self):
         """test illegal escape character"""
         self.assertTrue(
-            TestLexer.checkLexeme('"abc\\abc"', "Illegal escape in string: \"abc\\a", 160)
+            TestLexer.checkLexeme(
+                '"abc\\abc"', 'Illegal escape in string: "abc\\a', 160
+            )
         )
 
     def test_illegal_escape_2(self):
         """test illegal escape character"""
         self.assertTrue(
-            TestLexer.checkLexeme('"abc\\3"', "Illegal escape in string: \"abc\\3", 161)
+            TestLexer.checkLexeme('"abc\\3"', 'Illegal escape in string: "abc\\3', 161)
         )
 
     # !-------------------Test character sets -------------------!
@@ -659,57 +661,101 @@ class LexerSuite(unittest.TestCase):
         """test illegal escape character"""
         self.assertTrue(
             TestLexer.checkLexeme(
-                """ "\\" \\\\ \\q" """, 'Illegal escape in string: \"\\" \\\\ \\q', 186
+                """ "\\" \\\\ \\q" """, 'Illegal escape in string: "\\" \\\\ \\q', 186
             )
         )
+
     def test_unclosed_comment(self):
         """test unclosed comment"""
         self.assertTrue(
             TestLexer.checkLexeme(
-                """/* Unclosed comment""",
-                "/,*,Unclosed,comment,<EOF>",
-                187
+                """/* Unclosed comment""", "/,*,Unclosed,comment,<EOF>", 187
             )
         )
-    
+
     def test_very_long_identifier(self):
         """test very long identifier"""
-        self.assertTrue(
-            TestLexer.checkLexeme(
-                "a"*1000,
-                "a"*1000+",<EOF>",
-                188
-            )
-        )
-        
+        self.assertTrue(TestLexer.checkLexeme("a" * 1000, "a" * 1000 + ",<EOF>", 188))
+
     def test_separator_4(self):
         """test separators with new line"""
-        self.assertTrue(
-            TestLexer.checkLexeme(
-                "(){},;",
-                "(,),{,},,,;,<EOF>",
-                189
-            )
-        )
-        
+        self.assertTrue(TestLexer.checkLexeme("(){},;", "(,),{,},,,;,<EOF>", 189))
+
     def test_operator_4(self):
         """test with expression"""
         self.assertTrue(
-            TestLexer.checkLexeme(
-                "1+2-3*4/5%6",
-                "1,+,2,-,3,*,4,/,5,%,6,<EOF>",
-                190
-            )
+            TestLexer.checkLexeme("1+2-3*4/5%6", "1,+,2,-,3,*,4,/,5,%,6,<EOF>", 190)
         )
-        
+
     def test_operator_5(self):
         """test with expression"""
         self.assertTrue(
-            TestLexer.checkLexeme(
-                "1+2-3*4/5%6",
-                "1,+,2,-,3,*,4,/,5,%,6,<EOF>",
-                191
-            )
+            TestLexer.checkLexeme("1+2-3*4/5%6", "1,+,2,-,3,*,4,/,5,%,6,<EOF>", 191)
         )
+
+    def test_negative_number(self):
+        """test negative number"""
+        self.assertTrue(TestLexer.checkLexeme("-123", "-,123,<EOF>", 192))
+
+    def test_negative_float(self):
+        """test negative float"""
+        self.assertTrue(TestLexer.checkLexeme("-123.456", "-,123.456,<EOF>", 193))
+
+    def test_not_operator(self):
+        """test not operator"""
+        self.assertTrue(TestLexer.checkLexeme("!true", "!,true,<EOF>", 194))
+
+    def test_advanced_1(self):
+        """test advanced"""
+        input = """func main() {
+            if () {
+                a := 10;
+            }
+        }"""
+        expect = """func,main,(,),{,if,(,),{,a,:=,10,;,},;,},<EOF>"""
+        self.assertTrue(TestLexer.checkLexeme(input, expect, 195))
+
+    def test_advanced_2(self):
+        """test advanced"""
+        input = """func main() {
+            if (a > b) {
+                a := 10;
+            }
+        }"""
+        expect = """func,main,(,),{,if,(,a,>,b,),{,a,:=,10,;,},;,},<EOF>"""
+        self.assertTrue(TestLexer.checkLexeme(input, expect, 196))
         
         
+    def test_advanced_3(self):
+        """Test advanced"""
+        input = """func main() {
+            for _, value := range a {
+                a := value;
+            }
+        };"""
+        expect = """func,main,(,),{,for,_,,,value,:=,range,a,{,a,:=,value,;,},;,},;,<EOF>"""
+        self.assertTrue(TestLexer.checkLexeme(input, expect, 197))
+        
+    def test_advanced_4(self):
+        """Test advanced"""
+        input = """func main() {
+            for i := 0; i < 10; i += 1 {
+                print(i);
+            }
+        }"""
+        expect = """func,main,(,),{,for,i,:=,0,;,i,<,10,;,i,+=,1,{,print,(,i,),;,},;,},<EOF>"""
+        self.assertTrue(TestLexer.checkLexeme(input, expect, 198))
+        
+    def test_advanced_5(self):
+        input = """func main() {
+            a.foo(b);
+        }"""
+        expect = """func,main,(,),{,a,.,foo,(,b,),;,},<EOF>"""
+        self.assertTrue(TestLexer.checkLexeme(input, expect, 199))
+        
+    def test_advanced_6(self):
+        input = """func main() {
+            a[1] = 2;
+        }"""
+        expect = """func,main,(,),{,a,[,1,],=,2,;,},<EOF>"""
+        self.assertTrue(TestLexer.checkLexeme(input, expect, 200))
