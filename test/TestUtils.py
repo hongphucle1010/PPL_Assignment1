@@ -116,6 +116,9 @@ class TestParser:
             dest.close()
         dest = open("./test/solutions/" + str(num) + ".txt","r")
         line = dest.read()
+        if line != expect:
+            print("Expected: " + expect)
+            print("Got: " + line)
         return line == expect
 
 

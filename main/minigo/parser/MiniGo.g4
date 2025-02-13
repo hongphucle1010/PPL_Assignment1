@@ -51,7 +51,7 @@ varDeclaration:
 	| VAR ID ASSIGN expression;
 
 // Constant Declaration
-constDeclaration: CONST ID typeSpec? ASSIGN expression;
+constDeclaration: CONST ID ASSIGN expression;
 
 // Function Declaration
 funcDeclaration:
@@ -137,6 +137,7 @@ literal:
 	| STR_LIT
 	| TRUE
 	| FALSE
+	| NIL
 	| arrayLiteral
 	| structLiteral;
 arrayLiteral: arrayType LBRACE exprList? RBRACE;
