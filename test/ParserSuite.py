@@ -234,7 +234,6 @@ class ParserSuite(unittest.TestCase):
         expect = "Error on line 1 col 14: }"
         self.assertTrue(TestParser.checkParser(input, expect, 235))
 
-
     def test_invalid_method_declaration_2(self):
         """Nested method declaration"""
         input = """func (a Person) main() {func foo() {};};"""
@@ -285,7 +284,9 @@ class ParserSuite(unittest.TestCase):
 
     def test_interface_declaration(self):
         """Interface declaration"""
-        input = """type Person interface {};"""
+        input = """type Person interface {
+            Hello();
+            };"""
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 244))
 
@@ -1403,15 +1404,110 @@ class ParserSuite(unittest.TestCase):
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 380))
 
+    #! ------------------- My bug test ------------------- !
+
     def test_invalid_method_declaration(self):
         """Missing method identifier"""
         input = """func (a Person) () {};"""
         expect = "Error on line 1 col 17: ("
         self.assertTrue(TestParser.checkParser(input, expect, 381))
-        
+
     def test_invalid_method_declaration_5(self):
         """Missing method body statement"""
         input = """func (a Person) main() {};"""
         expect = "Error on line 1 col 25: }"
         self.assertTrue(TestParser.checkParser(input, expect, 382))
 
+    def test_invalid_interface_declaration4(self):
+        """Missing interface body method"""
+        input = """type Person interface {};"""
+        expect = "Error on line 1 col 24: }"
+        self.assertTrue(TestParser.checkParser(input, expect, 383))
+
+    def test_empty_sub_array_literal(self):
+        """Empty sub array literal"""
+        input = """func main() {
+                a := [2][3] int{{}, {}};
+            }"""
+        expect = "Error on line 2 col 34: }"
+        self.assertTrue(TestParser.checkParser(input, expect, 384))
+
+    def test_for_statement_with_scalar(self):
+        """For statement with non-scalar initialization"""
+        input = """func main() {
+            for a[1] := 0; i < 10; i+=1 {
+                a := i;
+            }
+        };"""
+        expect = "Error on line 2 col 22: :="
+        self.assertTrue(TestParser.checkParser(input, expect, 385))
+
+    def test_for_statement_with_scalar_2(self):
+        """For statement with non-scalar initialization: attribute assignment"""
+        input = """func main() {
+            for a.b := 0; i < 10; i+=1 {
+                    a := i;
+                }
+            }"""
+        expect = "Error on line 2 col 21: :="
+        self.assertTrue(TestParser.checkParser(input, expect, 386))
+        
+    def test_for_statement_with_scalar_3(self):
+        """For statement with non-scalar update"""
+        input = """func main() {
+            for i := 0; a[1]; i[1]+=1 {
+                a := i;
+            }
+        };"""
+        expect = "Error on line 2 col 32: ["
+        self.assertTrue(TestParser.checkParser(input, expect, 387))
+
+    def test_for_statement_with_scalar_4(self):
+        """For statement with non-scalar update: attribute assignment"""
+        input = """func main() {
+            for i := 0; i < 10; a.b += 1 {
+                    a := i;
+                }
+            }"""
+        expect = "Error on line 2 col 34: ."
+        self.assertTrue(TestParser.checkParser(input, expect, 388))
+        
+    def test_for_statement_with_scalar_5(self):
+        """For range statement with non-scalar index"""
+        input = """func main() {
+            for a[1], value := range a {
+                a := value;
+            }
+        };"""
+        expect = "Error on line 2 col 21: ,"
+        self.assertTrue(TestParser.checkParser(input, expect, 389))
+        
+    def test_for_statement_with_scalar_6(self):
+        """For range statement with non-scalar index: attribute assignment"""
+        input = """func main() {
+            for a.b, value := range a {
+                a := value;
+            }
+        };"""
+        expect = "Error on line 2 col 20: ,"
+        self.assertTrue(TestParser.checkParser(input, expect, 390))
+        
+    def test_for_statement_with_scalar_7(self):
+        """For range statement with non-scalar value"""
+        input = """func main() {
+            for i, a[1] := range a {
+                a := value;
+            }
+        };"""
+        expect = "Error on line 2 col 21: ["
+        self.assertTrue(TestParser.checkParser(input, expect, 391))
+        
+    def test_for_statement_with_scalar_8(self):
+        """For range statement with non-scalar value: attribute assignment"""
+        input = """func main() {
+            for i, a.b := range a {
+                a := value;
+            }
+        };"""
+        expect = "Error on line 2 col 21: ."
+        self.assertTrue(TestParser.checkParser(input, expect, 392))

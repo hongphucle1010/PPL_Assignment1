@@ -64,7 +64,7 @@ field: param;
 
 // Interface Declaration
 interfaceDeclaration:
-	TYPE ID INTERFACE LBRACE methodSignatures? RBRACE;
+	TYPE ID INTERFACE LBRACE methodSignatures RBRACE;
 methodSignatures: methodSignature SEMI methodSignatures?;
 methodSignature: ID LPAREN paramList? RPAREN typeSpec?;
 
@@ -108,8 +108,10 @@ forStmt: FOR forCondition block;
 forCondition: forExpr | forLoop | forRange;
 forExpr: expression;
 forLoop:
-	(varDeclaration | assignStmt)? SEMI expression? SEMI assignStmt?;
-forRange: (ID COMMA ID | UNDERSCORE COMMA ID) DECLARE RANGE ID;
+	(scalarDecl | scalarAssign) SEMI expression SEMI scalarAssign;
+forRange: (ID COMMA ID | UNDERSCORE COMMA ID) DECLARE RANGE expression;
+scalarDecl: VAR ID typeSpec? ASSIGN expression;
+scalarAssign: ID assignmentOp expression;
 
 // Other Statements
 breakStmt: BREAK;
@@ -125,6 +127,9 @@ typeSpec: arrayType | primitiveType | ID;
 literal:
 	INT_LIT
 	| FLOAT_LIT
+	| HEX_LIT
+	| BIN_LIT
+	| OCT_LIT
 	| STR_LIT
 	| TRUE
 	| FALSE
@@ -132,7 +137,7 @@ literal:
 	| arrayLiteral
 	| structLiteral;
 arrayLiteral: arrayType arrayBody;
-arrayBody: LBRACE arrayList? RBRACE;
+arrayBody: LBRACE arrayList RBRACE;
 arrayType: LBRACK INT_LIT RBRACK typeSpec;
 arrayList: arrayMember (COMMA arrayList)?;
 arrayMember: expression | arrayBody;
