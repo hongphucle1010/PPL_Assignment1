@@ -6,13 +6,18 @@ class ParserSuite(unittest.TestCase):
     # ! ------------------- Sample test ------------------- !
     def test_simple_program(self):
         """Simple program: void main() {}"""
-        input = """func main() {};"""
+        input = """func main() {
+                say("Hello, world!");
+            };"""
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 201))
 
     def test_more_complex_program(self):
         """More complex program"""
         input = """func foo () {
+            a := 1;
+            b := 2;
+            return a + b;
         };"""
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 202))
@@ -135,19 +140,25 @@ class ParserSuite(unittest.TestCase):
 
     def test_function_declaration(self):
         """Function declaration"""
-        input = """func main() {};"""
+        input = """func main() {
+                a:= 1;
+            };"""
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 222))
 
     def test_function_declaration_2(self):
         """Function declaration with parameter"""
-        input = """func main(a int) {};"""
+        input = """func main(a int) {
+                a:= 1;
+            };"""
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 223))
 
     def test_function_declaration_3(self):
         """Function declaration with return type"""
-        input = """func main() int {};"""
+        input = """func main() int {
+                return 1;
+            };"""
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 224))
 
@@ -165,19 +176,25 @@ class ParserSuite(unittest.TestCase):
 
     def test_method_declaration(self):
         """Method declaration"""
-        input = """func (a Person) main() {};"""
+        input = """func (a Person) main() {
+                a:= 1;
+            };"""
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 227))
 
     def test_method_declaration_2(self):
         """Method declaration with parameter"""
-        input = """func (a Person) main(b int) {};"""
+        input = """func (a Person) main(b int) {
+                a:= 1;
+            };"""
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 228))
 
     def test_method_declaration_3(self):
         """Method declaration with return type"""
-        input = """func (a Person) main() int {};"""
+        input = """func (a Person) main() int {
+                return 1;
+            };"""
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 229))
 
@@ -211,11 +228,12 @@ class ParserSuite(unittest.TestCase):
         expect = "Error on line 1 col 12: ;"
         self.assertTrue(TestParser.checkParser(input, expect, 234))
 
-    def test_invalid_method_declaration(self):
-        """Missing method identifier"""
-        input = """func (a Person) () {};"""
-        expect = "Error on line 1 col 17: ("
+    def test_invalid_function_declaration_4(self):
+        """Missing function body statement"""
+        input = """func main() {};"""
+        expect = "Error on line 1 col 14: }"
         self.assertTrue(TestParser.checkParser(input, expect, 235))
+
 
     def test_invalid_method_declaration_2(self):
         """Nested method declaration"""
@@ -1384,3 +1402,16 @@ class ParserSuite(unittest.TestCase):
         """
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 380))
+
+    def test_invalid_method_declaration(self):
+        """Missing method identifier"""
+        input = """func (a Person) () {};"""
+        expect = "Error on line 1 col 17: ("
+        self.assertTrue(TestParser.checkParser(input, expect, 381))
+        
+    def test_invalid_method_declaration_5(self):
+        """Missing method body statement"""
+        input = """func (a Person) main() {};"""
+        expect = "Error on line 1 col 25: }"
+        self.assertTrue(TestParser.checkParser(input, expect, 382))
+

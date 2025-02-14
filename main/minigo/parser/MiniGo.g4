@@ -69,7 +69,7 @@ methodSignatures: methodSignature SEMI methodSignatures?;
 methodSignature: ID LPAREN paramList? RPAREN typeSpec?;
 
 // Statements
-block: LBRACE stmtList? RBRACE;
+block: LBRACE stmtList RBRACE;
 stmtList: statement stmtList | statement;
 statement:
 	(
