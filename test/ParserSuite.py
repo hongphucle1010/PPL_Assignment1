@@ -1527,3 +1527,29 @@ class ParserSuite(unittest.TestCase):
         };"""
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 394))
+
+    def test_index_is_octal(self):
+        """Index is octal"""
+        input = """func main() {
+            a := b[0o12];
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 395))
+        
+    def test_index_is_hex(self):
+        """Index is hex"""
+        input = """func main() {
+            a := b[0x12];
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 396))
+        
+    def test_index_is_bin(self):
+        """Index is bin"""
+        input = """func main() {
+            a := b[0b101];
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 397))
+        
+        

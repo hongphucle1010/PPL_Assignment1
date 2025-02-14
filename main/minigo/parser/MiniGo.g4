@@ -125,7 +125,7 @@ typeSpec: arrayType | primitiveType | ID;
 
 // Literals
 literal:
-	INT_LIT
+	integer
 	| FLOAT_LIT
 	| HEX_LIT
 	| BIN_LIT
@@ -138,7 +138,7 @@ literal:
 	| structLiteral;
 arrayLiteral: arrayType arrayBody;
 arrayBody: LBRACE arrayList RBRACE;
-arrayType: LBRACK INT_LIT RBRACK typeSpec;
+arrayType: LBRACK integer RBRACK typeSpec;
 arrayList: arrayMember (COMMA arrayList)?;
 arrayMember: expression | arrayBody;
 structLiteral: ID LBRACE structElements? RBRACE;
@@ -175,6 +175,8 @@ expr7:
 funcCall: ID LPAREN exprList? RPAREN;
 methodCall: ID methodChain;
 methodChain: DOT ID LPAREN exprList? RPAREN (methodChain)?;
+
+integer: DEC_LIT | HEX_LIT | BIN_LIT | OCT_LIT;
 
 // !-----------------LEXER-----------------!
 IF: 'if';
@@ -234,7 +236,7 @@ COMMA: ',';
 SEMI: ';';
 COLON: ':';
 
-INT_LIT: '0' | [1-9] [0-9]*;
+DEC_LIT: '0' | [1-9] [0-9]*;
 BIN_LIT: '0' [bB] [01]+;
 OCT_LIT: '0' [oO] [0-7]+;
 HEX_LIT: '0' [xX] [0-9a-fA-F]+;
@@ -251,7 +253,7 @@ ID: [a-zA-Z_][a-zA-Z_0-9]*;
 NEWLINE:
 	'\r'? '\n' {
     if hasattr(self, 'last_token_type') and self.last_token_type in [
-		self.ID, self.INT_LIT, self.HEX_LIT, self.BIN_LIT, self.OCT_LIT, self.FLOAT_LIT, self.BOOLEAN, self.STR_LIT, 
+		self.ID, self.DEC_LIT, self.HEX_LIT, self.BIN_LIT, self.OCT_LIT, self.FLOAT_LIT, self.BOOLEAN, self.STR_LIT, 
 		self.RPAREN, self.RBRACK, self.RBRACE, self.STRING, self.INT, self.FLOAT, self.BOOLEAN, self.NIL, self.TRUE, self.FALSE,
 		self.RETURN, self.CONTINUE, self.BREAK
 	]:
