@@ -1404,7 +1404,7 @@ class ParserSuite(unittest.TestCase):
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 380))
 
-    #! ------------------- My bug test ------------------- !
+    #! ------------------- More tests ------------------- !
 
     def test_invalid_method_declaration(self):
         """Missing method identifier"""
@@ -1451,7 +1451,7 @@ class ParserSuite(unittest.TestCase):
             }"""
         expect = "Error on line 2 col 21: :="
         self.assertTrue(TestParser.checkParser(input, expect, 386))
-        
+
     def test_for_statement_with_scalar_3(self):
         """For statement with non-scalar update"""
         input = """func main() {
@@ -1471,7 +1471,7 @@ class ParserSuite(unittest.TestCase):
             }"""
         expect = "Error on line 2 col 34: ."
         self.assertTrue(TestParser.checkParser(input, expect, 388))
-        
+
     def test_for_statement_with_scalar_5(self):
         """For range statement with non-scalar index"""
         input = """func main() {
@@ -1481,7 +1481,7 @@ class ParserSuite(unittest.TestCase):
         };"""
         expect = "Error on line 2 col 21: ,"
         self.assertTrue(TestParser.checkParser(input, expect, 389))
-        
+
     def test_for_statement_with_scalar_6(self):
         """For range statement with non-scalar index: attribute assignment"""
         input = """func main() {
@@ -1491,7 +1491,7 @@ class ParserSuite(unittest.TestCase):
         };"""
         expect = "Error on line 2 col 20: ,"
         self.assertTrue(TestParser.checkParser(input, expect, 390))
-        
+
     def test_for_statement_with_scalar_7(self):
         """For range statement with non-scalar value"""
         input = """func main() {
@@ -1501,7 +1501,7 @@ class ParserSuite(unittest.TestCase):
         };"""
         expect = "Error on line 2 col 21: ["
         self.assertTrue(TestParser.checkParser(input, expect, 391))
-        
+
     def test_for_statement_with_scalar_8(self):
         """For range statement with non-scalar value: attribute assignment"""
         input = """func main() {
@@ -1511,3 +1511,19 @@ class ParserSuite(unittest.TestCase):
         };"""
         expect = "Error on line 2 col 21: ."
         self.assertTrue(TestParser.checkParser(input, expect, 392))
+
+    def test_array_var_declaration(self):
+        """Array declaration"""
+        input = """func main() {
+            var a [2] int;
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 393))
+
+    def test_array_var_declaration_2(self):
+        """Array declaration with array literal"""
+        input = """func main() {
+            var a [2] int = [2] int{1, 2};
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 394))
