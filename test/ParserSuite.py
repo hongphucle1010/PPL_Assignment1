@@ -1364,4 +1364,21 @@ class ParserSuite(unittest.TestCase):
         """
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 378))
-        
+
+    def test_method_call_with_expression_followed_by_dot(self):
+        """Method call with expression followed by dot"""
+        input = """func main() {
+            a := foo(1).bar();
+        }
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 379))
+
+    def test_method_call_with_expression_followed_by_dot_2(self):
+        """Method call with expression followed by dot"""
+        input = """func main() {
+            a := (b + c * d).foo();
+        }
+        """
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 380))
