@@ -60,7 +60,9 @@ class ParserSuite(unittest.TestCase):
 
     def test_program_structure_5(self):
         """Valid program with struct declaration"""
-        input = """type a struct {};"""
+        input = """type a struct {
+            name string;
+            };"""
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 210))
 
@@ -236,7 +238,7 @@ class ParserSuite(unittest.TestCase):
     def test_struct_declaration(self):
         """Struct declaration"""
         input = """type Person struct {};"""
-        expect = "successful"
+        expect = "Error on line 1 col 21: }"
         self.assertTrue(TestParser.checkParser(input, expect, 239))
 
     def test_struct_declaration_2(self):
