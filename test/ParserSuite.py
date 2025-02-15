@@ -1552,4 +1552,26 @@ class ParserSuite(unittest.TestCase):
         expect = "successful"
         self.assertTrue(TestParser.checkParser(input, expect, 397))
         
+    def test_array_literal_contain_expression(self):
+        """Array literal contain expression"""
+        input = """func main() {
+            a := [2] int{1 + 2, 3 * 4};
+        };"""
+        expect = "Error on line 2 col 28: +"
+        self.assertTrue(TestParser.checkParser(input, expect, 398))
         
+    def test_array_literal_contain_identifier(self):
+        """Array literal contain identifier"""
+        input = """func main() {
+            a := [2] int{a, b};
+        };"""
+        expect = "successful"
+        self.assertTrue(TestParser.checkParser(input, expect, 399))
+        
+    def test_array_literal_contain_wrong_array_literal(self):
+        """Array literal contain wrong array literal"""
+        input = """func main() {
+            a := [2] int{[2] int{1, 2}, [2] int{3, 4}};
+        };"""
+        expect = "Error on line 2 col 26: ["
+        self.assertTrue(TestParser.checkParser(input, expect, 400))

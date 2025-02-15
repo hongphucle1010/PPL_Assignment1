@@ -124,7 +124,8 @@ primitiveType: INT | FLOAT | STRING | BOOLEAN;
 typeSpec: arrayType | primitiveType | ID;
 
 // Literals
-literal:
+literal: notArrayLiteral | arrayLiteral;
+notArrayLiteral:
 	integer
 	| FLOAT_LIT
 	| HEX_LIT
@@ -134,13 +135,12 @@ literal:
 	| TRUE
 	| FALSE
 	| NIL
-	| arrayLiteral
 	| structLiteral;
 arrayLiteral: arrayType arrayBody;
 arrayBody: LBRACE arrayList RBRACE;
 arrayType: LBRACK integer RBRACK typeSpec;
 arrayList: arrayMember (COMMA arrayList)?;
-arrayMember: expression | arrayBody;
+arrayMember: notArrayLiteral | ID | arrayBody;
 structLiteral: ID LBRACE structElements? RBRACE;
 structElements: structElement (COMMA structElements)?;
 structElement: ID COLON expression;
@@ -252,11 +252,25 @@ ID: [a-zA-Z_][a-zA-Z_0-9]*;
 
 NEWLINE:
 	'\r'? '\n' {
-    if hasattr(self, 'last_token_type') and self.last_token_type in [
-		self.ID, self.DEC_LIT, self.HEX_LIT, self.BIN_LIT, self.OCT_LIT, self.FLOAT_LIT, self.BOOLEAN, self.STR_LIT, 
-		self.RPAREN, self.RBRACK, self.RBRACE, self.STRING, self.INT, self.FLOAT, self.BOOLEAN, self.NIL, self.TRUE, self.FALSE,
-		self.RETURN, self.CONTINUE, self.BREAK
-	]:
+    literal_tokens = [
+        self.DEC_LIT, self.HEX_LIT, self.BIN_LIT, self.OCT_LIT, self.FLOAT_LIT, self.BOOLEAN, self.STR_LIT
+    ]
+    type_tokens = [
+        self.STRING, self.INT, self.FLOAT, self.NIL, self.TRUE, self.FALSE
+    ]
+    statement_tokens = [
+        self.RETURN, self.CONTINUE, self.BREAK
+    ]
+    bracket_tokens = [
+        self.RPAREN, self.RBRACK, self.RBRACE
+    ]
+    identifier_tokens = [
+        self.ID
+    ]
+    
+    if hasattr(self, 'last_token_type') and self.last_token_type in (
+        literal_tokens + type_tokens + statement_tokens + bracket_tokens + identifier_tokens
+    ):
         self.text = ';'
         self.type = self.SEMI
     else:
