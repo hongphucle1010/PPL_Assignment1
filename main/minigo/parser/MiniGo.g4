@@ -136,7 +136,8 @@ notArrayLiteral:
 	| structLiteral;
 arrayLiteral: arrayType arrayBody;
 arrayBody: LBRACE arrayList RBRACE;
-arrayType: LBRACK integer RBRACK (arrayType | baseType);
+arrayType: LBRACK arrayDim RBRACK (arrayType | baseType);
+arrayDim: integer | ID;
 arrayList: arrayMember (COMMA arrayList)?;
 arrayMember: notArrayLiteral | ID | arrayBody;
 structLiteral: ID LBRACE structElements? RBRACE;
