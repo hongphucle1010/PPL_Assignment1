@@ -121,7 +121,8 @@ returnStmt: RETURN expression?;
 
 // Types
 primitiveType: INT | FLOAT | STRING | BOOLEAN;
-typeSpec: arrayType | primitiveType | ID;
+baseType: primitiveType | ID;
+typeSpec: arrayType | baseType;
 
 // Literals
 literal: notArrayLiteral | arrayLiteral;
@@ -135,7 +136,7 @@ notArrayLiteral:
 	| structLiteral;
 arrayLiteral: arrayType arrayBody;
 arrayBody: LBRACE arrayList RBRACE;
-arrayType: LBRACK integer RBRACK typeSpec;
+arrayType: LBRACK integer RBRACK (arrayType | baseType);
 arrayList: arrayMember (COMMA arrayList)?;
 arrayMember: notArrayLiteral | ID | arrayBody;
 structLiteral: ID LBRACE structElements? RBRACE;
@@ -167,11 +168,9 @@ expr7:
 	literal
 	| ID
 	| LPAREN expression RPAREN
-	| funcCall
-	| methodCall;
+	| funcCall;
 funcCall: ID LPAREN exprList? RPAREN;
-methodCall: ID methodChain;
-methodChain: DOT ID LPAREN exprList? RPAREN (methodChain)?;
+methodCall: expr6 DOT funcCall;
 
 integer: DEC_LIT | HEX_LIT | BIN_LIT | OCT_LIT;
 
