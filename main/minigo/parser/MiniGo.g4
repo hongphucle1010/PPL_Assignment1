@@ -128,9 +128,6 @@ literal: notArrayLiteral | arrayLiteral;
 notArrayLiteral:
 	integer
 	| FLOAT_LIT
-	| HEX_LIT
-	| BIN_LIT
-	| OCT_LIT
 	| STR_LIT
 	| TRUE
 	| FALSE
