@@ -78,9 +78,9 @@ statement:
 		| continueStmt
 		| callStmt
 		| returnStmt
+		| varDeclaration
+		| constDeclaration
 	) SEMI
-	| varDeclaration
-	| constDeclaration
 	| ifStmt SEMI?
 	| forStmt SEMI?;
 
