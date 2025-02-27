@@ -60,7 +60,7 @@ methodReceiver: LPAREN ID ID RPAREN;
 // Struct Declaration
 structDeclaration: TYPE ID STRUCT LBRACE structFields RBRACE;
 structFields: field SEMI structFields?;
-field: param;
+field: ID typeSpec;
 
 // Interface Declaration
 interfaceDeclaration:
